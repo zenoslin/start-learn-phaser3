@@ -30,12 +30,14 @@
         }
       };
 
-      var player;
-      var platforms;
-      var cursors;
-      var stars;
+      let player;
+      let platforms;
+      let cursors;
+      let stars;
+      let score = 0;
+      let scoreText;
 
-      var game = new Phaser.Game(config);
+      let game = new Phaser.Game(config);
 
       function preload() {
         this.load.image("sky", "assets/sky.png");
@@ -77,9 +79,9 @@
           }
         });
 
-        stars.children.iterate(function (child) {
+        stars.children.iterate(child => {
           child.setBounce(Phaser.Math.FloatBetween(0.4, 0.8));
-        })
+        });
 
         // 增加三个方向动作
         this.anims.create({
@@ -107,6 +109,8 @@
         this.physics.add.collider(player, platforms);
         this.physics.add.collider(stars, platforms);
         this.physics.add.overlap(player, stars, collectStar, null, this);
+      
+        scoreText = this.add.text(16, 16, 'socre: 0', {fontSize: '32', fill: '#000'});
       }
 
       function update() {
@@ -127,8 +131,11 @@
         }
       }
 
-      function collectStar (player, star) {
+      function collectStar(player, star) {
         star.disableBody(true, true);
+
+        score += 10;
+        scoreText.setText('Score: ' + score);
       }
     </script>
   </body>
