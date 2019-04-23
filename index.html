@@ -36,6 +36,7 @@
       let stars;
       let score = 0;
       let scoreText;
+      let bombs;
 
       let game = new Phaser.Game(config);
 
@@ -83,6 +84,8 @@
           child.setBounce(Phaser.Math.FloatBetween(0.4, 0.8));
         });
 
+        bombs = this.physics.add.group();
+
         // 增加三个方向动作
         this.anims.create({
           key: "left",
@@ -109,8 +112,13 @@
         this.physics.add.collider(player, platforms);
         this.physics.add.collider(stars, platforms);
         this.physics.add.overlap(player, stars, collectStar, null, this);
-      
-        scoreText = this.add.text(16, 16, 'socre: 0', {fontSize: '32', fill: '#000'});
+        this.physics.add.collider(bombs, platforms);
+        this.physics.add.collider(player, bombs, hitBomb, null, this);
+
+        scoreText = this.add.text(16, 16, "socre: 0", {
+          fontSize: "32",
+          fill: "#000"
+        });
       }
 
       function update() {
@@ -135,7 +143,28 @@
         star.disableBody(true, true);
 
         score += 10;
-        scoreText.setText('Score: ' + score);
+        scoreText.setText("Score: " + score);
+
+        if (stars.countActive(true) == 0) {
+          stars.children.iterate(child => {
+            child.enableBody(true, child.x, 0, true, true);
+          });
+          let x =
+            player.x < 400
+              ? Phaser.Math.Between(400, 800)
+              : Phaser.Math.Between(0, 400);
+          let bomb = bombs.create(x, 16, 'bomb');
+          bomb.setBounce(1);
+          bomb.setCollideWorldBounds(true);
+          bomb.setVelocity(Phaser.Math.Between(-200, 200), 20);
+        }
+      }
+
+      function hitBomb(player, bomb) {
+        this.physics.pause();
+        player.setTint(0xff0000);
+        player.anims.play('turn');
+        gameOver = true;
       }
     </script>
   </body>
