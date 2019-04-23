@@ -1,0 +1,12 @@
+{
+  "name": "start-learn-phaser3",
+  "version": "1.0.0",
+  "description": "learning Phaser3",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "hs \"\" -p 8080 --cors *"
+  },
+  "author": "",
+  "license": "ISC"
+}
